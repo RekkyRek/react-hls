@@ -15,9 +15,19 @@ export default class HLSPlayer extends Component {
 
     let hls = new HLS()
 
+    console.log(hls)
+
     this.state = {
       hls
     }
+  }
+
+  play () {
+    this.refs.video.play()
+  }
+
+  pause () {
+    this.refs.video.pause()
   }
 
   componentDidMount () {
@@ -30,11 +40,14 @@ export default class HLSPlayer extends Component {
         this.refs.video.play()
       })
     }
+
+    this.refs.video.ontimeupdate = () => this.props.ontimeupdate(this.refs.video.currentTime, this.refs.video.duration)
+    this.refs.video.onprogress = (e) => this.props.onloadedupdate(e)
   }
   render () {
     return (
       <div className='hlsplayer'>
-        <video ref='video' controls />
+        <video ref='video' />
       </div>
     )
   }
