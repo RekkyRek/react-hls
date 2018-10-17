@@ -30,7 +30,15 @@ export default class HLSPlayer extends Component {
     this.refs.video.pause()
   }
 
+  seekTo (to) {
+    this.refs.video.currentTime = (this.refs.video.duration / 100) * to
+  }
+
   componentDidMount () {
+    this.refs.video.ontimeupdate = () => this.props.ontimeupdate(this.refs.video.currentTime, this.refs.video.duration)
+    this.refs.video.onplay = (e) => this.props.onplaybackstateupdate(true)
+    this.refs.video.onpause = (e) => this.props.onplaybackstateupdate(false)
+
     if (this.state.nativeHLS && this.refs.video.canPlayType('application/vnd.apple.mpegurl')) {
 
     } else {
@@ -40,8 +48,6 @@ export default class HLSPlayer extends Component {
         this.refs.video.play()
       })
     }
-
-    this.refs.video.ontimeupdate = () => this.props.ontimeupdate(this.refs.video.currentTime, this.refs.video.duration)
     this.refs.video.onprogress = (e) => this.props.onloadedupdate(e)
   }
   render () {
